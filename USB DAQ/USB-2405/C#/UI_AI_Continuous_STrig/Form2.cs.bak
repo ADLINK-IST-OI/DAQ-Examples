@@ -1,0 +1,522 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.IO;
+using System.Threading;
+using System.Diagnostics;
+
+namespace AIO_Simultaneous_UI
+{
+    public partial class frm_logger : Form
+    {
+        public Size g_form_size_normal;
+        public Size g_form_size_large;
+        public frm_main g_parent;
+        public string g_data_logger_path;
+        public double g_data_logger_seconds;
+        public double g_data_logger_seconds_go;
+        public double g_data_logger_seconds_steps;
+        public bool g_data_logger_enabled;
+        public bool g_data_logger_started;
+        public System.Threading.Timer g_data_logger_timer;
+        public object g_data_logger_locker;
+        public AutoResetEvent g_data_logger_event;
+        public Thread g_data_logger_thread;
+
+        public string g_data_converter_source;
+        public string g_data_converter_destination;
+
+        public delegate void delfn_data_logger_update(double data_logger_seconds, double data_logger_seconds_go, bool data_logger_done);
+        public void fn_data_logger_update(double data_logger_seconds, double data_logger_seconds_go, bool data_logger_done)
+        {
+            if (InvokeRequired && IsHandleCreated)
+            {
+                try
+                {
+                    this.Invoke(new delfn_data_logger_update(fn_data_logger_update), new object[] { data_logger_seconds, data_logger_seconds_go, data_logger_done });
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            else
+            {
+                //
+                // Update UI control HERE
+                //
+                if (IsHandleCreated)
+                {
+                    int tmp_value = (int)(data_logger_seconds_go * 1000);
+                    if (tmp_value >= this.pbar_data_logger_progress.Maximum)
+                    {
+                        this.pbar_data_logger_progress.Value = this.pbar_data_logger_progress.Maximum;
+                    }
+                    else
+                    {
+                        //this.pbar_data_logger_progress.PerformStep();
+                        this.pbar_data_logger_progress.Value = tmp_value;
+                    }
+                    if (data_logger_done)
+                    {
+                        this.btn_data_logger_path.Enabled = true;
+                        this.tbox_data_logger_path.Enabled = true;
+                        this.tbox_data_logger_seconds.Enabled = true;
+                        this.cbox_data_logger_enabled.Enabled = true;
+                        this.gbox_data_converter.Enabled = true;
+                        this.btn_data_logger_start.Text = "Start Logging";
+                    }
+                }
+            }
+        }
+
+        public void fn_data_logger_timer(object State)
+        {
+            if (Monitor.TryEnter(g_data_logger_locker))
+            {
+                try
+                {
+                    if (g_data_logger_enabled == true && g_data_logger_started == true && g_data_logger_seconds_go < g_data_logger_seconds)
+                    {
+                        g_data_logger_seconds_go += g_data_logger_seconds_steps;
+                        fn_data_logger_update(g_data_logger_seconds, g_data_logger_seconds_go, false);
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(g_data_logger_locker);
+                }
+            }
+        }
+
+        public void fn_data_logger_thread()
+        {
+            bool result = g_data_logger_event.WaitOne((int)(g_data_logger_seconds * 1000));
+            if (result == true)
+            {
+                // Manually reset
+            }
+            else
+            {
+                // Set variables
+                g_data_logger_started = false;
+                g_parent.fn_set_data_logger_started(g_data_logger_started);
+
+                // Stop checking timer
+                g_data_logger_timer.Dispose();
+
+                // Set control
+                g_data_logger_seconds_go = g_data_logger_seconds;
+                fn_data_logger_update(g_data_logger_seconds, g_data_logger_seconds_go, true);
+            }
+        }
+
+        static double[] fn_get_double_array(byte[] byte_array)
+        {
+            return Enumerable.Range(0, byte_array.Length / sizeof(double)).Select(offset => BitConverter.ToDouble(byte_array, offset * sizeof(double))).ToArray();
+        }
+
+        static file_header fn_get_file_header(byte[] byte_array)
+        {
+            file_header my_struct = new file_header();
+            int my_struct_size = Marshal.SizeOf(my_struct);
+
+            IntPtr my_struct_ptr = Marshal.AllocHGlobal(my_struct_size);
+
+            Marshal.Copy(byte_array, 0, my_struct_ptr, my_struct_size);
+            my_struct = (file_header)Marshal.PtrToStructure(my_struct_ptr, my_struct.GetType());
+            Marshal.FreeHGlobal(my_struct_ptr);
+
+            return my_struct;
+        }
+
+        public frm_logger()
+        {
+            InitializeComponent();
+        }
+
+        private void frm_log_Load(object sender, EventArgs e)
+        {
+            g_form_size_normal = new Size(546, 176);
+            g_form_size_large = new Size(546, 362);
+
+            g_parent.fn_get_data_logger_path(out g_data_logger_path);
+            g_parent.fn_get_data_logger_seconds(out g_data_logger_seconds);
+            g_parent.fn_get_data_logger_enabled(out g_data_logger_enabled);
+
+            g_data_logger_seconds_go = 0;
+            g_data_logger_seconds_steps = 0.1; // 0.1 seconds
+            g_data_logger_started = false;
+            g_parent.fn_set_data_logger_started(g_data_logger_started);
+
+            g_data_converter_source = g_data_logger_path;
+            g_data_converter_destination = g_data_converter_source + ".csv";
+
+            this.tbox_data_logger_path.Text = g_data_logger_path;
+            this.tbox_data_logger_seconds.Text = g_data_logger_seconds.ToString();
+            this.cbox_data_logger_enabled.Checked = g_data_logger_enabled;
+
+            this.btn_data_logger_path.Enabled = g_data_logger_enabled;
+            this.tbox_data_logger_path.Enabled = g_data_logger_enabled;
+            this.tbox_data_logger_seconds.Enabled = g_data_logger_enabled;
+            this.btn_data_logger_start.Enabled = g_data_logger_enabled;
+
+            this.tbox_data_converter_source.Text = g_data_converter_source;
+            this.tbox_data_converter_destination.Text = g_data_converter_destination;
+
+            this.Size = g_form_size_normal;
+            this.Owner = g_parent;
+        }
+
+        private void frm_log_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //
+        }
+
+        private void frm_logger_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (g_data_logger_started == true)
+            {
+                btn_data_logger_start_Click(this.btn_data_logger_start, null);
+            }
+            g_parent.fn_rsset_data_logger_form();
+        }
+
+        private void frm_xxxxx_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            if (this.ActiveControl is TextBox)
+            {
+                this.ActiveControl = this.lb_data_logger_path;//ActiveControl.Parent;
+            }
+        }
+        
+        private void btn_data_logger_path_Click(object sender, EventArgs e)
+        {
+            // Data Logger Path
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Path.GetDirectoryName(g_data_logger_path);
+            dlg.Title = "Select Path";
+            //dlg.CheckFileExists = false;
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                g_data_logger_path = dlg.FileName;
+                this.tbox_data_logger_path.Text = g_data_logger_path;
+            }
+        }
+
+        private void tbox_data_logger_path_Validating(object sender, CancelEventArgs e)
+        {
+            // Data Logging Path
+            if (sender != null)
+            {
+                TextBox tmp_tbox_data_logger_path = (TextBox)sender;
+                if (tmp_tbox_data_logger_path.Text == "")
+                {
+                    MessageBox.Show("Data logging path is empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.tbox_data_logger_path.Text = g_data_logger_path;
+                    this.tbox_data_logger_path.Focus();
+                    return;
+                }
+
+                g_data_logger_path = tmp_tbox_data_logger_path.Text;
+                this.tbox_data_logger_path.Text = g_data_logger_path;
+            }
+        }
+
+        private void tbox_data_logger_path_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Data Logging Path
+            if (sender != null)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+            }
+        }
+
+        private void tbox_data_logger_seconds_Validating(object sender, CancelEventArgs e)
+        {
+            // Data Logging Time
+            if (sender != null)
+            {
+                TextBox tmp_tbox_data_logger_seconds = (TextBox)sender;
+                if (tmp_tbox_data_logger_seconds.Text == "")
+                {
+                    MessageBox.Show("Data logging time is empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.tbox_data_logger_seconds.Text = g_data_logger_seconds.ToString();
+                    this.tbox_data_logger_seconds.Focus();
+                    return;
+                }
+
+                double tmp_data_logger_seconds = Convert.ToDouble(tmp_tbox_data_logger_seconds.Text);
+                if (tmp_data_logger_seconds <= 0)
+                {
+                    MessageBox.Show("Data logging time must be greater than 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    tmp_data_logger_seconds = g_data_logger_seconds;
+                }
+
+                g_data_logger_seconds = tmp_data_logger_seconds;
+                this.tbox_data_logger_seconds.Text = g_data_logger_seconds.ToString();
+            }
+        }
+
+        private void tbox_data_logger_seconds_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Data Logger Time
+            if (sender != null)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+            }
+        }
+
+        private void cbox_data_logger_enabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                CheckBox tmp_cbox_data_logger_enabled = (CheckBox)sender;
+                g_data_logger_enabled = tmp_cbox_data_logger_enabled.Checked;
+
+                this.btn_data_logger_path.Enabled = g_data_logger_enabled;
+                this.tbox_data_logger_path.Enabled = g_data_logger_enabled;
+                this.tbox_data_logger_seconds.Enabled = g_data_logger_enabled;
+                this.btn_data_logger_start.Enabled = g_data_logger_enabled;
+            }
+        }
+
+        private void btn_data_logger_start_Click(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                Button tmp_btn_data_logger_start = (Button)sender;
+                this.Cursor = Cursors.WaitCursor;
+                if (g_data_logger_started == false)
+                {
+                    // Set variables
+                    g_parent.fn_set_data_logger_path(g_data_logger_path);
+                    g_parent.fn_set_data_logger_seconds(g_data_logger_seconds);
+                    g_parent.fn_set_data_logger_enabled(g_data_logger_enabled);
+
+                    g_data_logger_seconds_go = 0;
+                    g_data_logger_started = true;
+                    g_parent.fn_set_data_logger_started(g_data_logger_started);
+
+                    // Start checking timer and thread
+                    this.pbar_data_logger_progress.Maximum = (int)(g_data_logger_seconds * 1000);
+                    this.pbar_data_logger_progress.Minimum = 0;
+                    this.pbar_data_logger_progress.Step = (int)(g_data_logger_seconds_steps * 1000);
+                    this.pbar_data_logger_progress.Value = 0;
+
+                    g_data_logger_event = new AutoResetEvent(false);
+                    g_data_logger_thread = new Thread(new ThreadStart(fn_data_logger_thread));
+                    g_data_logger_thread.Start();
+                    g_data_logger_locker = new object();
+                    g_data_logger_timer = new System.Threading.Timer(new System.Threading.TimerCallback(fn_data_logger_timer), new StackTrace(true).GetFrame(0).GetMethod().Name, 0, (uint)(g_data_logger_seconds_steps * 1000));
+
+                    // Set control
+                    this.btn_data_logger_path.Enabled = false;
+                    this.tbox_data_logger_path.Enabled = false;
+                    this.tbox_data_logger_seconds.Enabled = false;
+                    this.cbox_data_logger_enabled.Enabled = false;
+                    this.gbox_data_converter.Enabled = false;
+                    this.btn_data_logger_start.Text = "Stop Logging";
+                }
+                else
+                {
+                    // Set variables
+                    g_data_logger_started = false;
+                    g_parent.fn_set_data_logger_started(g_data_logger_started);
+
+                    // Stop checking timer and thread
+                    g_data_logger_timer.Dispose();
+                    g_data_logger_event.Set();
+
+                    // Set control
+                    this.pbar_data_logger_progress.Value = this.pbar_data_logger_progress.Maximum;
+                    this.btn_data_logger_path.Enabled = true;
+                    this.tbox_data_logger_path.Enabled = true;
+                    this.tbox_data_logger_seconds.Enabled = true;
+                    this.cbox_data_logger_enabled.Enabled = true;
+                    this.gbox_data_converter.Enabled = true;
+                    this.btn_data_logger_start.Text = "Start Logging";
+                }
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void btn_data_logger_advanced_Click(object sender, EventArgs e)
+        {
+            if (this.Size == g_form_size_normal)
+            {
+                this.Size = g_form_size_large;
+            }
+            else
+            {
+                this.Size = g_form_size_normal;
+            }
+        }
+
+        private void btn_data_converter_source_Click(object sender, EventArgs e)
+        {
+            // Data Converter Source
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Path.GetDirectoryName(g_data_converter_source);
+            dlg.Title = "Select Source";
+            dlg.Filter = "Binary File|*.bin|All File|*";
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK && dlg.FileName != null)
+            {
+                g_data_converter_source = dlg.FileName;
+                this.tbox_data_converter_source.Text = g_data_converter_source;
+            }
+        }
+
+        private void tbox_data_converter_source_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Data Converter Source
+            if (sender != null)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+            }
+        }
+
+        private void tbox_data_converter_source_Validating(object sender, CancelEventArgs e)
+        {
+            // Data Converter Source
+            if (sender != null)
+            {
+                TextBox tmp_tbox_data_converter_source = (TextBox)sender;
+                if (tmp_tbox_data_converter_source.Text == "")
+                {
+                    MessageBox.Show("File source path is empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.tbox_data_converter_source.Text = g_data_converter_source;
+                    this.tbox_data_converter_source.Focus();
+                    return;
+                }
+
+                g_data_converter_source = tmp_tbox_data_converter_source.Text;
+                this.tbox_data_converter_source.Text = g_data_converter_source;
+            }
+        }
+
+        private void btn_data_converter_destination_Click(object sender, EventArgs e)
+        {
+            // Data Converter Destination
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Path.GetDirectoryName(g_data_converter_destination);
+            dlg.Title = "Select Destination";
+            //dlg.CheckFileExists = false;
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                g_data_converter_destination = dlg.FileName;
+                this.tbox_data_converter_destination.Text = g_data_converter_destination;
+            }
+        }
+
+        private void tbox_data_converter_destination_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Data Converter Destination
+            if (sender != null)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+            }
+        }
+
+        private void tbox_data_converter_destination_Validating(object sender, CancelEventArgs e)
+        {
+            // Data Converter Destination
+            if (sender != null)
+            {
+                TextBox tmp_tbox_data_converter_destination = (TextBox)sender;
+                if (tmp_tbox_data_converter_destination.Text == "")
+                {
+                    MessageBox.Show("File destination Path is empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.tbox_data_converter_destination.Text = g_data_converter_destination;
+                    this.tbox_data_converter_destination.Focus();
+                    return;
+                }
+
+                g_data_converter_destination = tmp_tbox_data_converter_destination.Text;
+                this.tbox_data_converter_destination.Text = g_data_converter_destination;
+            }
+        }
+
+        private void btn_data_converter_start_Click(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                this.Cursor = Cursors.WaitCursor;
+
+                // Open source file
+                FileStream data_converter_file_source = new FileStream(g_data_converter_source, FileMode.Open, FileAccess.Read);
+                data_converter_file_source.Seek(0, SeekOrigin.Begin);
+
+                // Read source file header to get information
+                file_header data_converter_file_info = new file_header();
+                byte[] tmp_header_byte_array = new byte[Marshal.SizeOf(data_converter_file_info)];
+                data_converter_file_source.Read(tmp_header_byte_array, 0, Marshal.SizeOf(data_converter_file_info));
+                data_converter_file_info = fn_get_file_header(tmp_header_byte_array);
+                ushort ai_chnl_cnt = data_converter_file_info.ai_chnl_cnt;
+
+                // Read source file data and then write to a text file
+                StreamWriter data_converter_file_destination = new StreamWriter(g_data_converter_destination);
+                double[] data_array = new double[ai_chnl_cnt];
+                byte[] tmp_data_byte_array = new byte[ai_chnl_cnt * sizeof(double)];
+                try
+                {
+                    do {
+                        int tmp_read_cnt = data_converter_file_source.Read(tmp_data_byte_array, 0, ai_chnl_cnt * sizeof(double));
+                        if (tmp_read_cnt < ai_chnl_cnt * sizeof(double))
+                        {
+                            break;
+                        }
+                        data_array = fn_get_double_array(tmp_data_byte_array);
+                        for (ushort vi = 0; vi < ai_chnl_cnt; ++vi)
+                        {
+                            data_converter_file_destination.Write("{0:f8},", data_array[vi]);
+                        }
+                        data_converter_file_destination.Write("\n");
+                    } while (true);
+                }
+                catch
+                {
+                }
+                finally
+                {
+                    data_converter_file_destination.Close();
+                }
+
+                MessageBox.Show("Data conversion is complete", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void btn_data_converter_folder_Click(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                if (g_data_converter_destination != "")
+                {
+                    Process.Start(Path.GetDirectoryName(g_data_converter_destination));
+                }
+                else
+                {
+                    Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+                }
+            }
+        }
+    }
+}
