@@ -1,0 +1,684 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using System.IO;
+using System.Threading;
+
+public class Win32Interop
+{
+    [DllImport("crtdll.dll")]
+    public static extern int _kbhit();
+}
+
+namespace AI_ACQ_ReTrig
+{
+    struct program_config
+    {
+        // Program status
+        public bool is_reg_dev;
+        public bool is_set_buf;
+        public bool is_op_run;
+
+        // Device configuration variables
+        public ushort card_type;
+        public ushort card_subtype;
+        public ushort card_num;
+        public ushort card_handle;
+
+        // Sample rate configuration variables
+        public double sample_rate;
+        public double actual_rate;
+
+        // Channel configuration variables
+        public ushort chnl_sel;
+        public ushort chnl_cnt;
+        public ushort chnl_range;
+        public ushort chnl_config;
+
+        // Trigger configuration variables
+        public ushort trig_target;
+        public ushort trig_config;
+        public uint retrig_count;
+        public uint trig_delay;
+        public bool is_set_ana_trig;
+
+        // Analog trigger configuration variables
+        public uint ana_trig_src;
+        public uint ana_trig_mode;
+        public double ana_trig_threshold;
+
+        // Data buffer & file variables
+        public uint chnl_sample_count;
+        public uint all_data_count;
+        public uint buf_size;
+        public IntPtr raw_data_buf;
+        public double[] scale_data_buf;
+        public uint[] buf_id_array;
+        public ushort file_format;
+        public string file_name;
+        public StreamWriter file_writer;
+
+        // AI operation status variables
+        public uint access_cnt;
+        public bool op_stopped;
+        public bool is_trig_ready;
+        public ushort trig_ready_cnt;
+    }
+
+    class Program
+    {
+        static program_config config_para;
+
+        // Get console ushort input
+        static ushort get_console_input(ushort default_value)
+        {
+            ushort result;
+
+            try { result = Convert.ToUInt16(Console.ReadLine()); }
+            catch { result = default_value; }
+
+            return result;
+        }
+
+        // Get console uint input
+        static uint get_console_input(uint default_value)
+        {
+            uint result;
+            try { result = Convert.ToUInt32(Console.ReadLine()); }
+            catch { result = default_value; }
+
+            return result;
+        }
+
+        // Get console double input
+        static double get_console_input(double default_value)
+        {
+            double result;
+            try { result = Convert.ToDouble(Console.ReadLine()); }
+            catch { result = default_value; }
+
+            return result;
+        }
+
+        // Program exit handler
+        static void exit_handle()
+        {
+            if (config_para.is_op_run)
+            {
+                // Async Clear
+                DSA_DASK.DSA_AI_AsyncClear(config_para.card_handle, out config_para.access_cnt);
+            }
+
+            if (config_para.is_set_buf)
+            {
+                // Reset buffer
+                DSA_DASK.DSA_AI_ContBufferReset(config_para.card_handle);
+
+                Marshal.FreeHGlobal(config_para.raw_data_buf);
+            }
+
+            if (config_para.is_reg_dev)
+            {
+                // Release device
+                DSA_DASK.DSA_Release_Card(config_para.card_handle);
+            }
+
+            Console.Write("\n\nPress any key to exit...");
+            Console.ReadLine();
+            Environment.Exit(0);
+        }
+
+        // Configuration function for 9527
+        static void p9527_config()
+        {
+            // Sub-card type
+            Console.Write("\nSub-card type? (0) PCI-9527, (1) PXI-9527: [0] ");
+            config_para.card_subtype = get_console_input((ushort)0);
+            if (config_para.card_subtype > 1)
+            {
+                Console.Write("Warning! Invalid sub-card type. Force to set to PCI-9527.\n");
+                config_para.card_subtype = 0;
+            }
+
+            // Card number
+            Console.Write("Card number? [0] ");
+            config_para.card_num = get_console_input((ushort)0);
+
+            // Sample rate
+            Console.Write("Sample rate? ({0} ~ {1}): [{1}] ", DSA_DASK.P9527_AI_MinDDSFreq, DSA_DASK.P9527_AI_MaxDDSFreq);
+            config_para.sample_rate = get_console_input((double)DSA_DASK.P9527_AI_MaxDDSFreq);
+            if (config_para.sample_rate < DSA_DASK.P9527_AI_MinDDSFreq || config_para.sample_rate > DSA_DASK.P9527_AI_MaxDDSFreq)
+            {
+                Console.Write("Warning! Invalid sample rate. Force to set to {0}.\n", DSA_DASK.P9527_AI_MaxDDSFreq);
+                config_para.sample_rate = (double)DSA_DASK.P9527_AI_MaxDDSFreq;
+            }
+
+            // AI channel
+            Console.Write("Channel selection? ({0}) AI_CH_0, ({1}) AI_CH_1, ({2}) AI_CH_DUAL: [{2}] ",
+                          DSA_DASK.P9527_AI_CH_0, DSA_DASK.P9527_AI_CH_1, DSA_DASK.P9527_AI_CH_DUAL);
+            config_para.chnl_sel = get_console_input((ushort)DSA_DASK.P9527_AI_CH_DUAL);
+            switch(config_para.chnl_sel)
+            {
+                case DSA_DASK.P9527_AI_CH_0:
+                case DSA_DASK.P9527_AI_CH_1:
+                    config_para.chnl_cnt = 1;
+                    break;
+                case DSA_DASK.P9527_AI_CH_DUAL:
+                    config_para.chnl_cnt = 2;
+                    break;
+                default:
+                    Console.Write("Warning! Invalid channel selection. Force to set to AI_CH_DUAL.\n");
+                    config_para.chnl_sel = (ushort)DSA_DASK.P9527_AI_CH_DUAL;
+                    config_para.chnl_cnt = 2;
+                    break;
+            }
+
+            // AI channel range
+            Console.Write("Channel range? (0) B_40_V, (1) B_10_V, (2) B_3_16_V, (3) AD_B_1_V, (4) AD_B_0_316_V: [1] ");
+            ushort tmp_chnl_range = get_console_input((ushort)1);
+            double tmp_range_lower, tmp_range_upper;
+            switch (tmp_chnl_range)
+            {
+                case 0:
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_40_V;
+                    tmp_range_lower = -40;
+                    tmp_range_upper = 40;
+                    break;
+                case 1:
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_10_V;
+                    tmp_range_lower = -10;
+                    tmp_range_upper = 10;
+                    break;
+                case 2:
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_3_16_V;
+                    tmp_range_lower = -3.16;
+                    tmp_range_upper = 3.16;
+                    break;
+                case 3:
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_1_V;
+                    tmp_range_lower = -1;
+                    tmp_range_upper = 1;
+                    break;
+                case 4:
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_0_316_V;
+                    tmp_range_lower = -0.316;
+                    tmp_range_upper = 0.316;
+                    break;
+                default:
+                    Console.Write("Warning! Invalid channel range. Force to set to B_10_V.\n");
+                    config_para.chnl_range = (ushort)DSA_DASK.AD_B_10_V;
+                    tmp_range_lower = -10;
+                    tmp_range_upper = 10;
+                    break;
+            }
+
+            // AI channel input type
+            Console.Write("Channel input type? ({0}) Differential, ({1}) PseudoDifferential: [{1}] ",
+                          DSA_DASK.P9527_AI_Differential, DSA_DASK.P9527_AI_PseudoDifferential);
+            config_para.chnl_config = get_console_input((ushort)DSA_DASK.P9527_AI_PseudoDifferential);
+            if (config_para.chnl_config > DSA_DASK.P9527_AI_PseudoDifferential)
+            {
+                Console.Write("Warning! Invalid channel input type. Force to set to PseudoDifferential.\n");
+                config_para.chnl_config = (ushort)DSA_DASK.P9527_AI_PseudoDifferential;
+            }
+
+            // AI channel input coupling
+            Console.Write("Channel input coupling? (0) DC_Coupling, (1) AC_Coupling, (2) IEPE: [0] ");
+            ushort tmp_chnl_config = get_console_input((ushort)0);
+            switch (tmp_chnl_config)
+            {
+                case 0:
+                    config_para.chnl_config |= (ushort)DSA_DASK.P9527_AI_Coupling_DC;
+                    break;
+                case 1:
+                    config_para.chnl_config |= (ushort)DSA_DASK.P9527_AI_Coupling_AC;
+                    break;
+                case 2:
+                    config_para.chnl_config |= (ushort)DSA_DASK.P9527_AI_EnableIEPE;
+                    break;
+                default:
+                    Console.Write("Warning! Invalid channel input coupling. Force to set to DC_Coupling.\n");
+                    config_para.chnl_config |= (ushort)DSA_DASK.P9527_AI_Coupling_DC;
+                    break;
+            }
+
+            // Trigger target
+            config_para.trig_target = DSA_DASK.P9527_TRG_AI;
+
+            // Trigger mode
+            Console.Write("Trigger mode? ({0}) Post_trigger, ({1}) Delay_trigger: [{0}] ",
+                          DSA_DASK.P9527_TRG_MODE_POST, DSA_DASK.P9527_TRG_MODE_DELAY);
+            bool tmp_set_delay_trig_cnt = false;
+            config_para.trig_config = get_console_input((ushort)DSA_DASK.P9527_TRG_MODE_POST);
+            if (config_para.trig_config > DSA_DASK.P9527_TRG_MODE_DELAY)
+            {
+                Console.Write("Warning! Invalid trigger mode. Force to set to Post_trigger.\n");
+                config_para.trig_config = (ushort)DSA_DASK.P9527_TRG_MODE_POST;
+            }
+            else if (config_para.trig_config == DSA_DASK.P9527_TRG_MODE_DELAY)
+            {
+                tmp_set_delay_trig_cnt = true;
+            }
+
+            // Trigger source
+            ushort tmp_trig_source;
+            bool tmp_set_trig_pol = false;
+            if (config_para.card_subtype == 0)
+            {
+                // PCI-9527
+                Console.Write("Trigger source? (0) External_Digital, (1) Analog, (2) SSI_9: [0] ");
+                tmp_trig_source = get_console_input((ushort)0);
+                switch (tmp_trig_source)
+                {
+                    case 0:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_EXTD;
+                        break;
+                    case 1:
+                        config_para.is_set_ana_trig = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_ANALOG;
+                        break;
+                    case 2:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_SSI9;
+                        break;
+                    default:
+                        Console.Write("Warning! Invalid trigger source. Force to set to External_Digital.\n");
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_EXTD;
+                        break;
+                }
+            }
+            else
+            {
+                // PXI-9527
+                Console.Write("Trigger source? (0) External_Digital, (1) Analog, (2) PXI_StartIn, (3) PXI_Bus_0, (4) PXI_Bus_1, (5) PXI_Bus_2, (6) PXI_Bus_3, (7) PXI_Bus_4, (8) PXI_Bus_5, (9) PXI_Bus_6, (10) PXI_Bus_7: [0] ");
+                tmp_trig_source = get_console_input((ushort)0);
+                switch (tmp_trig_source)
+                {
+                    case 0:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_EXTD;
+                        break;
+                    case 1:
+                        config_para.is_set_ana_trig = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_ANALOG;
+                        break;
+                    case 2:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_STARTIN;
+                        break;
+                    case 3:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS0;
+                        break;
+                    case 4:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS1;
+                        break;
+                    case 5:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS2;
+                        break;
+                    case 6:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS3;
+                        break;
+                    case 7:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS4;
+                        break;
+                    case 8:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS5;
+                        break;
+                    case 9:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS6;
+                        break;
+                    case 10:
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_PXI_BUS7;
+                        break;
+                    default:
+                        Console.Write("Warning! Invalid trigger source. Force to set to External_Digital.\n");
+                        tmp_set_trig_pol = true;
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_SRC_EXTD;
+                        break;
+                }
+            }
+
+            // Trigger polarity
+            if (tmp_set_trig_pol)
+            {
+                Console.Write("Trigger polarity? (0) Negative, (1) Positive: [1] ");
+                ushort tmp_trig_polarity = get_console_input((ushort)1);
+                switch (tmp_trig_polarity)
+                {
+                    case 0:
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_Negative;
+                        break;
+                    case 1:
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_Positive;
+                        break;
+                    default:
+                        Console.Write("Warning! Invalid trigger polarity. Force to set to Positive.\n");
+                        config_para.trig_config |= DSA_DASK.P9527_TRG_Positive;
+                        break;
+                }
+            }
+
+            // Re-trigger settings
+            // Enable re-trigger
+            config_para.trig_config |= DSA_DASK.P9527_TRG_EnReTigger;
+
+            // Re-trigger count
+            Console.Write("Re-trigger count (Number of accepted triggers is N+1)? (1 ~ 4294967294): [3] ");
+            config_para.retrig_count = get_console_input((uint)3);
+            if (config_para.retrig_count == 0)
+            {
+                Console.Write("Warning! Invalid re-trigger count. Force to set to 3.\n");
+                config_para.retrig_count = 3;
+            }
+
+            // Delay trigger settings
+            if (tmp_set_delay_trig_cnt)
+            {
+                Console.Write("Delay trigger count? (0 ~ 4294967295): [0] ");
+                config_para.trig_delay = get_console_input((uint)0);
+            }
+
+            // Analog trigger settings
+            if (config_para.is_set_ana_trig)
+            {
+                // Analog trigger source
+                if (config_para.chnl_sel == DSA_DASK.P9527_AI_CH_0)
+                {
+                    config_para.ana_trig_src = DSA_DASK.P9527_TRG_Analog_CH0;
+                }
+                else if (config_para.chnl_sel == DSA_DASK.P9527_AI_CH_1)
+                {
+                    config_para.ana_trig_src = DSA_DASK.P9527_TRG_Analog_CH1;
+                }
+                else
+                {
+                    Console.Write("Analog trigger source? ({0}) AI_CH_0, ({1}) AI_CH_1: [{0}] ",
+                                  DSA_DASK.P9527_TRG_Analog_CH0, DSA_DASK.P9527_TRG_Analog_CH1);
+                    config_para.ana_trig_src = get_console_input((uint)DSA_DASK.P9527_TRG_Analog_CH0);
+                    if (config_para.ana_trig_src > DSA_DASK.P9527_TRG_Analog_CH1)
+                    {
+                        Console.Write("Warning! Invalid analog trigger source. Force to set to AI_CH_0.\n");
+                        config_para.ana_trig_src = DSA_DASK.P9527_TRG_Analog_CH0;
+                    }
+                }
+
+                // Analog trigger mode
+                Console.Write("Analog trigger mode? ({0}) Above_threshold, ({1}) Below_threshold: [{0}] ",
+                              DSA_DASK.P9527_TRG_Analog_Above_threshold, DSA_DASK.P9527_TRG_Analog_Below_threshold);
+                config_para.ana_trig_mode = get_console_input((uint)DSA_DASK.P9527_TRG_Analog_Above_threshold);
+                if (config_para.ana_trig_mode > DSA_DASK.P9527_TRG_Analog_Below_threshold)
+                {
+                    Console.Write("Warning! Invalid analog trigger source. Force to set to Above_threshold.\n");
+                    config_para.ana_trig_mode = DSA_DASK.P9527_TRG_Analog_Above_threshold;
+                }
+
+                // Analog trigger threshold
+                Console.Write("Analog trigger threshold? ({0} ~ {1}): [0] ", tmp_range_lower, tmp_range_upper);
+                config_para.ana_trig_threshold = get_console_input((double)0);
+                if (config_para.ana_trig_threshold < tmp_range_lower || config_para.ana_trig_threshold > tmp_range_upper)
+                {
+                    Console.Write("Warning! Invalid analog trigger threshold. Force to set to 0.\n");
+                    config_para.ana_trig_threshold = 0;
+                }
+            }
+
+            // Sample count
+            Console.Write("Sample count (per channel / per trigger)? [65536] ");
+            config_para.chnl_sample_count = get_console_input((uint)65536);
+            config_para.all_data_count = config_para.chnl_sample_count * config_para.chnl_cnt;
+            if (config_para.all_data_count == 0 || config_para.all_data_count % 2 != 0)
+            {
+                Console.Write("Warning! Invalid sample count. Force to set to 65536.\n");
+                config_para.chnl_sample_count = (uint)65536;
+                config_para.all_data_count = config_para.chnl_sample_count * config_para.chnl_cnt;
+            }
+            // For finite re-trigger mode, you should prepare enough large buffer for data acquired with all comming triggers
+            config_para.buf_size = config_para.all_data_count * (config_para.retrig_count + 1);
+
+            // File format
+            Console.Write("Store data to (0) Text file, (1) Binary file: [0] ");
+            config_para.file_format = get_console_input((ushort)0);
+            string tmp_default_file_name;
+            switch (config_para.file_format)
+            {
+                case 0:
+                    tmp_default_file_name = "ai_data.csv";
+                    break;
+                case 1:
+                    tmp_default_file_name = "ai_data";
+                    break;
+                default:
+                    config_para.file_format = 0;
+                    tmp_default_file_name = "ai_data.csv";
+                    break;
+            }
+            if (config_para.file_format > 1)
+            {
+                config_para.file_format = 0;
+            }
+
+            // File name
+            Console.Write("File name to be stored: [{0}] ", tmp_default_file_name);
+            config_para.file_name = Console.ReadLine();
+            if (config_para.file_name == "")
+            {
+                config_para.file_name = tmp_default_file_name;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            Console.Write("This example performs AI acquisition with re-trigger.\n");
+            Console.Write("Press 'Enter' to continue...");
+            Console.ReadLine();
+
+            config_para.card_type = DSA_DASK.PCI_9527;
+            p9527_config();
+
+            // Register a specified device, it sets and initializes all related variables and necessary resources.
+            // This function must be called before calling any other functions to control the device.
+            // Remember to call DSA_Release_Card() to release all allocated resources.
+            short result = DSA_DASK.DSA_Register_Card(config_para.card_type, config_para.card_num);
+            if (result < 0)
+            {
+                Console.Write("\nFalied to perform DSA_Register_Card(), error: " + result);
+                exit_handle();
+            }
+            config_para.card_handle = (ushort)result;
+            config_para.is_reg_dev = true;
+
+            // Configure sampling rate for a registered device, it will return the actual sample rate.
+            // This function must be called before calling any AI-related functions to perform AI operation.
+            // There is a timing constraint when AI and AO function are enabled simultaneously.
+            // Please refer P9527 Hardware Manual section 3.5.3 for details.
+            result = DSA_DASK.DSA_AI_9527_ConfigSampleRate(config_para.card_handle, config_para.sample_rate, out config_para.actual_rate);
+            if (result != DSA_DASK.NoError)
+            {
+                if (result == -81)
+                {
+                    Console.Write("\nWarning! Sample rate has been locked by AO job!");
+                }
+                else
+                {
+                    Console.Write("\nFalied to perform DSA_AI_9527_ConfigSampleRate(), error: " + result);
+                    exit_handle();
+                }
+            }
+
+            // Configure AI channel/function for a registered device
+            // This function may take a few seconds to initial and adjust ADC settings
+            Console.Write("\nConfiguring AI...");
+            Console.Write("\nIt may take a few seconds to initial ADC, please wait... ");
+            result = DSA_DASK.DSA_AI_9527_ConfigChannel(config_para.card_handle, config_para.chnl_sel, config_para.chnl_range,
+                                                        config_para.chnl_config, false/*AutoReset*/);
+            if (result != DSA_DASK.NoError)
+            {
+                Console.Write("\nFalied to perform DSA_AI_9527_ConfigChannel(), error: " + result);
+                exit_handle();
+            }
+            Console.Write("done\n");
+
+            // Configure trigger for a registered device
+            result = DSA_DASK.DSA_TRG_Config(config_para.card_handle, config_para.trig_target, config_para.trig_config,
+                                             config_para.retrig_count, config_para.trig_delay);
+            if (result != DSA_DASK.NoError)
+            {
+                Console.Write("\nFalied to perform DSA_TRG_Config(), error: " + result);
+                exit_handle();
+            }
+
+            // If trigger source is set to analog trigger by using DSA_TRG_Config(),
+            // This function should be called to setup analog trigger configurations.
+            // Due to refer AI input range setting, DSA_AI_9527_ConfigChannel() must be called before calling this function.
+            if (config_para.is_set_ana_trig)
+            {
+                result = DSA_DASK.DSA_TRG_ConfigAnalogTrigger(config_para.card_handle, config_para.ana_trig_src, config_para.ana_trig_mode,
+                                                              config_para.ana_trig_threshold);
+                if (result != DSA_DASK.NoError)
+                {
+                    Console.Write("\nFalied to perform DSA_TRG_ConfigAnalogTrigger(), error: " + result);
+                    exit_handle();
+                }
+            }
+
+            // Disable double-buffer mode
+            // DSA-Dask provides a technique called double-buffer mode to perform continuous AI operation.
+            // Please refer DSA-DASK User Manual section 5.2 for details.
+            // Due to acquire finite number of AI samples with re-trigger, we disable it.
+            result = DSA_DASK.DSA_AI_AsyncDblBufferMode(config_para.card_handle, false);
+            if (result != DSA_DASK.NoError)
+            {
+                Console.Write("\nFalied to perform DSA_AI_AsyncDblBufferMode(), error: " + result);
+                exit_handle();
+            }
+
+            // Setup buffer for data transfer
+            // Allocates memory from the unmanaged memory of the process.
+            // Note: If a memory is allocated from the managed heap to perform DAQ/DMA operation,
+            //       the memory might be moved by the GC and then an unexpected memory exception error is happened.
+            config_para.raw_data_buf = Marshal.AllocHGlobal((int)(sizeof(uint) * config_para.buf_size));
+            config_para.scale_data_buf = new double[config_para.buf_size];
+            config_para.buf_id_array = new uint[1];
+            ushort buf_id;
+            result = DSA_DASK.DSA_AI_ContBufferSetup(config_para.card_handle, config_para.raw_data_buf,
+                                                     config_para.buf_size, out buf_id);
+            if (result != DSA_DASK.NoError)
+            {
+                Marshal.FreeHGlobal(config_para.raw_data_buf);
+                Console.Write("\nFalied to perform DSA_AI_ContBufferSetup(), error: " + result);
+                exit_handle();
+            }
+            config_para.buf_id_array[0] = buf_id;
+            config_para.is_set_buf = true;
+
+            Console.Write("\nPress 'Enter' to start AI operation with actual sample rate {0:f4} Hz", config_para.actual_rate);
+            Console.ReadLine();
+            if (config_para.file_format == 0)
+            {
+                // Read AI data, and the acquired raw data will be stored in the set buffer.
+                result = DSA_DASK.DSA_AI_ContReadChannel(config_para.card_handle, config_para.chnl_sel, 0/*Ignored*/,
+                                                         config_para.buf_id_array, config_para.all_data_count, 0/*Ignored*/, DSA_DASK.ASYNCH_OP);
+            }
+            else
+            {
+                // Read AI data, and the acquired raw data will be stored in the set buffer.
+                // When the buffer is ready, call DSA_AI_AsyncDblBufferToFile() to transfer data to the specified binary file.
+                result = DSA_DASK.DSA_AI_ContReadChannelToFile(config_para.card_handle, config_para.chnl_sel, 0/*Ignored*/,
+                                                               config_para.file_name, config_para.all_data_count, 0/*Ignored*/, DSA_DASK.ASYNCH_OP);
+            }
+            if (result != DSA_DASK.NoError)
+            {
+                Console.Write("\nFalied to perform DSA_AI_ContReadChannel[ToFile](), error: " + result);
+                exit_handle();
+            }
+            config_para.is_op_run = true;
+
+            Console.Write("\nAI operation is started, waiting {0} triggers from the set trigger source...\n", config_para.retrig_count + 1);
+
+            do {
+                // In retrigger mode, you can use this function to check the operation status.
+                result = DSA_DASK.DSA_AI_AsyncReTrigNextReady(config_para.card_handle, out config_para.is_trig_ready,
+                                                              out config_para.op_stopped, out config_para.trig_ready_cnt);
+                if (result != DSA_DASK.NoError)
+                {
+                    Console.Write("\nFalied to perform DSA_AI_AsyncReTrigNextReady(), error: " + result);
+                    exit_handle();
+                }
+
+                if (config_para.is_trig_ready)
+                {
+                    // Trigger ready with next trigger
+                    Console.Write("\nTrigger ready, trigger count: {0}", config_para.trig_ready_cnt);
+                }
+                if (config_para.op_stopped)
+                {
+                    // Trigger ready without next trigger
+                    Console.Write("\nLast trigger ready, trigger Count: {0}", config_para.trig_ready_cnt);
+                }
+
+                Thread.Sleep(1);
+            } while (Win32Interop._kbhit() == 0 && ! config_para.op_stopped);
+
+            if (! config_para.op_stopped)
+            {
+                Console.ReadLine();
+                Console.Write("\nAI acquisition is manually stopped!");
+            }
+            else
+            {
+                Console.Write("\n\nAI acquisition is complete!");
+            }
+
+            // Clear AI setting
+            DSA_DASK.DSA_AI_AsyncClear(config_para.card_handle, out config_para.access_cnt);
+            config_para.is_op_run = false;
+
+            if (config_para.file_format == 0)
+            {
+                // Convert AI raw data to scaled data, it depends on the setting of channel range.
+                Console.Write("\nConverting AI raw data... ");
+                DSA_DASK.DSA_AI_ContVScale(config_para.card_handle, config_para.chnl_range, config_para.raw_data_buf,
+                                           config_para.scale_data_buf, (int)config_para.buf_size);
+                Console.Write("done");
+
+                // Write to file
+                Console.Write("\nWriting AI data to text file {0}... ", config_para.file_name);
+                config_para.file_writer = new StreamWriter(config_para.file_name);
+                for (int vi = 0; vi < config_para.buf_size / config_para.chnl_cnt; ++ vi)
+                {
+                    for (int vj = 0; vj < config_para.chnl_cnt; ++ vj)
+                    {
+                        config_para.file_writer.Write("{0:f8},", config_para.scale_data_buf[vi * config_para.chnl_cnt + vj]);
+                    }
+                    config_para.file_writer.Write("\n");
+                }
+                config_para.file_writer.Close();
+                Console.Write("done");
+            }
+            else
+            {
+                // Transfer data to file
+                Console.Write("\nTransfer AI data to binary file {0}.dat... ", config_para.file_name);
+                DSA_DASK.DSA_AI_AsyncDblBufferToFile(config_para.card_handle);
+                Console.Write("done");
+                Console.Write("\nYou can use Data File Convert Utility to convert it.");
+            }
+
+            // Exit program
+            exit_handle();
+        }
+    }
+}
