@@ -1,0 +1,62 @@
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai\9114 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\bin\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\bin\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 ai dma\9114 polling\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\bin\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\bin\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 dbf\9114 polling\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\bin\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\bin\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 all\9222 tw\9222 dbf\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\obj\x86\Debug\9112 readchannel.exe
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\bin\Debug\9112 readchannel.exe
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\bin\Debug\9112 readchannel.pdb
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\obj\x86\Debug\9222  polling.csproj.GenerateResource.Cache
+C:\Users\test\Desktop\9222 tw\9222 tw\9222 dbf\bin\Debug\ZedGraph.dll
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\bin\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\bin\Debug\9222 multichannel.pdb
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\bin\Debug\ZedGraph.dll
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\_9222_readchannel.Properties.Resources.resources
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\9222  polling.csproj.GenerateResource.Cache
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\9222 multichannel.pdb
+C:\Users\test\Desktop\2018-3-30 PCI-9222 C Sharp 32-bit Double_Buffer_Check Marshal.AllocHGlobal (ChiehYuan Andre 弘毅 嘉臣)\9222 muti_chan (2018-4-9 Vincentsj)\9222 tw\9222 dbf\obj\x86\Debug\9222  polling.csprojResolveAssemblyReference.cache
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\obj\x86\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\obj\x86\Debug\9222 multichannel.pdb
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\bin\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\bin\Debug\9222 multichannel.pdb
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\bin\Debug\ZedGraph.dll
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\obj\x86\Debug\_9222_readchannel.Properties.Resources.resources
+C:\Users\test\Desktop\9222 multi_channel\9222 tw\9222 dbf\obj\x86\Debug\9222  polling.csproj.GenerateResource.Cache
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\9222 multichannel.pdb
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\ZedGraph.dll
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\_9222_readchannel.Properties.Resources.resources
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9222  polling.csproj.GenerateResource.Cache
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9222 multichannel.exe
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9222 multichannel.pdb

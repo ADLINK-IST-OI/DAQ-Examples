@@ -1,0 +1,8 @@
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\ZedGraph.dll
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\_9222_readchannel.Properties.Resources.resources
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9221 DBF.csproj.GenerateResource.Cache
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\9221 multichannel.exe
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\bin\Debug\9221 multichannel.pdb
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9221 multichannel.exe
+C:\Users\test\Desktop\9221_Continue multi_channel\9221\9222 dbf\obj\x86\Debug\9221 multichannel.pdb
