@@ -1,0 +1,18 @@
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\bin\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\bin\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112  polling.csproj.GenerateResource.Cache
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel  ao\9112 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel  ao\9112 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 polling\9112 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 polling\9112 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 polling\9112 polling\bin\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 polling\9112 polling\bin\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 polling\9112 polling\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user\Desktop\9112 polling\9112 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user\Desktop\9112 polling\9112 polling\obj\x86\Debug\9112  polling.csproj.GenerateResource.Cache
+D:\develop\c#\工控相关程序\数据采集卡\9112\9112 polling\9112 polling\obj\x86\Debug\9112 readchannel.exe
+D:\develop\c#\工控相关程序\数据采集卡\9112\9112 polling\9112 polling\obj\x86\Debug\9112 readchannel.pdb

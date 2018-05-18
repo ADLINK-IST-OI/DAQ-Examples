@@ -1,0 +1,31 @@
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.exe
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+D:\9114\9114 polling\9114 polling\bin\Debug\9112 readchannel.exe
+D:\9114\9114 polling\9114 polling\bin\Debug\9112 readchannel.pdb
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\_9112_polling.Form1.resources
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\9114\9114 polling\9114 polling\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9114 polling\9114 polling\bin\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9114 polling\9114 polling\bin\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\user\Desktop\9114 polling\9114 polling\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\c#\daq\9114dg\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.exe
+E:\c#\daq\9114dg\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+D:\develop\c#\工控相关程序\数据采集卡\9114\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.exe
+D:\develop\c#\工控相关程序\数据采集卡\9114\9114 polling\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\_9112_polling.Form1.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\bin\Debug\9112 readchannel.exe
+C:\Users\user.USER-AF04NTGFQD\Desktop\9222 polling\9114 polling\bin\Debug\9112 readchannel.pdb

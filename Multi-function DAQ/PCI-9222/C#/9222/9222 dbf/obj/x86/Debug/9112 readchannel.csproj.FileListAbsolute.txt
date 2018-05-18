@@ -1,0 +1,42 @@
+E:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.exe
+E:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.pdb
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Form1.resources
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+E:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+D:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.exe
+D:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.pdb
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Form1.resources
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.write.1.tlog
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+F:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.exe
+F:\c#\9112\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.pdb
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Form1.resources
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.read.1.tlog
+F:\c#\9112\9112 readchannel\9112 readchannel\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\bin\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Form1.resources
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user\Desktop\9112 readchannel\9112 readchannel\obj\x86\Debug\9112 readchannel.csproj.GenerateResource.Cache
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\bin\Debug\9112 readchannel.exe
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\bin\Debug\9112 readchannel.pdb
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\_9112_readchannel.Form1.resources
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\_9112_readchannel.Properties.Resources.resources
+C:\Users\user\Desktop\9112 readchannel  ao\9112 readchannel\obj\x86\Debug\9112 readchannel.csproj.GenerateResource.Cache
