@@ -1,4 +1,4 @@
-Updated : 2018.05.22 (Fred Tsai)
+Latest Updated Date: 2018/05/22 (Fred Tsai)
 Description: PXIe-9848 C/C++ program. It shows throughput test results (two steps DMA).
 Module: PXIe-9848
 Function: AI
