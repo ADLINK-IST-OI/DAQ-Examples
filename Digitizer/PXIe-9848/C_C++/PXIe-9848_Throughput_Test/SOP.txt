@@ -1,0 +1,5 @@
+1. install WD-DASK(v3.10 or above for 98x6; v3.20 or above for PXIe-9848)
+2. run START -> all programs -> ADLINK -> WD-DASK -> WD Configuration Utility
+  -> configure 98x6 or 9848 memory at least 512MB
+3. restart OS
+4. run throughput test program (98x6 or 9848)
