@@ -1,0 +1,17 @@
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\bin\x86\Release\1902dma.exe
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\bin\x86\Release\1902dma.pdb
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\_902dma.Form1.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\_902dma.FormCard.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\_902dma.Properties.Resources.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\1902dma.csproj.GenerateResource.Cache
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\1902dma.exe
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma - 複製\obj\x86\Release\1902dma.pdb
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\1902dma.exe
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\1902dma.pdb
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\bin\x86\Release\1902dma.exe
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\bin\x86\Release\1902dma.pdb
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\1902dma.csprojResolveAssemblyReference.cache
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\_902dma.Form1.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\_902dma.FormCard.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\_902dma.Properties.Resources.resources
+C:\ADLINK\UDASK\samples\1901_02_03\C#\1902Dbfdma_CallBack\obj\x86\Release\1902dma.csproj.GenerateResource.Cache
