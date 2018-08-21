@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: DSA_AI_DMA - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\MVA\AppData\Local\Temp\RSP3CD.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /I "../../../include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/DSA_AI_DMA.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\ADLINK\DSA-DASK\Samples\9529\C9529C_AI_DMA_SSI_2_Cards_DBF\DSA_AI_DMA.cpp"
+]
+Creating command line "cl.exe @C:\Users\MVA\AppData\Local\Temp\RSP3CD.tmp" 
+Creating temporary file "C:\Users\MVA\AppData\Local\Temp\RSP3CE.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../../../lib/DSA-Dask.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/9529_AI_DMA_SSI_Master.pdb" /debug /machine:I386 /out:"Debug/9529_AI_DMA_SSI_Master.exe" /pdbtype:sept 
+".\Debug\DSA_AI_DMA.obj"
+]
+Creating command line "link.exe @C:\Users\MVA\AppData\Local\Temp\RSP3CE.tmp"
+<h3>Output Window</h3>
+Compiling...
+Skipping... (no relevant changes detected)
+DSA_AI_DMA.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+9529_AI_DMA_SSI_Master.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
