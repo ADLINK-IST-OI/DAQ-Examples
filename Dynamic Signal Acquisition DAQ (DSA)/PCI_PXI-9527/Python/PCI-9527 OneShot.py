@@ -1,9 +1,9 @@
 #####################################################################################
 # ADLINK DAQ-9527 to acquire/measure DATA  
-# This sample program show how to ust import DLL
+# This sample program shows how to import DLL
 # AI One shot acquisition for PCI-9527
 # This sample program was built with Python IDLE 3.7.1
-# ADLINK Technologies 2018 2018.12.04
+# ADLINK Technologies 2018.12.04
 #####################################################################################
 
 import sys
